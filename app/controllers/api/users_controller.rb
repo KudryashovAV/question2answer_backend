@@ -1,7 +1,5 @@
 module Api
   class UsersController < ApplicationController
-    skip_forgery_protection
-
     def index
       users = User.all
 
@@ -16,6 +14,7 @@ module Api
 
     def create
       (render json: { status: :bad_request } and return) unless is_crsf_token_valid?
+
       params = JSON.parse(request.raw_post)
 
       user = User.find_or_create_by(clerk_id: params["clerkId"],
@@ -24,8 +23,7 @@ module Api
                                     email: params["email"],
                                     picture: params["picture"])
 
-      render json: { status: user.errors.empty? ? :success : :error }
+      render json: user.errors.empty? ? user.attributes.merge(status: :success) : { status: :error }
     end
-
   end
 end

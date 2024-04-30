@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  skip_forgery_protection
+
   private
 
   def is_crsf_token_valid?
