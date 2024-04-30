@@ -17,11 +17,5 @@ module Api
 
       render json: { status: answer.errors.empty? ? :success : :error }
     end
-
-    private
-
-    def is_crsf_token_valid?
-      request.headers["X-CSRF-TOKEN"] === Digest::MD5.hexdigest(Date.today.strftime("%Y/%m/%d"))
-    end
   end
 end

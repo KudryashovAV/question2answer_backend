@@ -7,7 +7,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     resources :questions, only: %i[index show]
-    resources :users, only: %i[index show]
+    resources :users, only: %i[index show create]
     resources :tags, only: :index
     resources :answers, only:  %i[index create]
   end
