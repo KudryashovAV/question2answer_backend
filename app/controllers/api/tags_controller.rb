@@ -3,7 +3,29 @@ module Api
     def index
       tags = Tag.all
 
-      render json: tags
+      question_tags = QuestionTag.where(question_id: tags.pluck(:id)).group_by(&:tag_id)
+
+      response =
+        tags.map { |tag| tag.attributes.merge(questions_count: question_tags[tag.id].count) }
+                 .sort_by{ |question| question[:questions_count] }
+                 .reverse
+
+      render json: response
+    end
+
+    def show
+      tag = Tag.find(params[:id])
+      questions = tag.questions
+
+      answers = Answer.where(question_id: questions.pluck(:id)).group_by(&:question_id)
+
+      response =
+        questions.map { |ques| ques.attributes.merge(answers_count: answers[ques.id].count,
+                                                     tags: ques.tags.map{ |t| { name: t.name, id: t.id } }) }
+                 .sort_by{ |question| question["answers_count"] }
+                 .reverse
+
+      render json: {tag: tag, questions: response }
     end
 
     def create

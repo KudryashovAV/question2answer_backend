@@ -19,7 +19,7 @@ module Api
 
       user = User.find_or_create_by(clerk_id: params["clerkId"],
                                     name: params["name"],
-                                    user_name: params["username"],
+                                    user_name: params["email"].split("@").first,
                                     email: params["email"],
                                     picture: params["picture"])
 
