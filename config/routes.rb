@@ -7,5 +7,7 @@ Rails.application.routes.draw do
     resources :question_tags, only: :create
     resources :tags, only: %i[index show create]
     resources :users, only: %i[index show create]
+
+    get "/user_info" => "users#user_info"
   end
 end

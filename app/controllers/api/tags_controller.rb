@@ -2,6 +2,7 @@ module Api
   class TagsController < ApplicationController
     def index
       tags = Tag.all
+      tags = tags.where("lower(name) LIKE '%#{tag_params[:query].downcase}%'") if need_search?
 
       question_tags = QuestionTag.where(question_id: tags.pluck(:id)).group_by(&:tag_id)
 
@@ -36,6 +37,16 @@ module Api
       tag = Tag.find_or_create_by(name: params["name"].downcase)
 
       render json: tag.errors.empty? ? tag.attributes.merge(status: :success) : { status: :error }
+    end
+
+    private
+
+    def tag_params
+      params.permit(:query, :page)
+    end
+
+    def need_search?
+      tag_params[:query].present? && tag_params[:query] != "undefined"
     end
   end
 end
