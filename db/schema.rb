@@ -17,9 +17,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_29_163426) do
   create_table "answers", force: :cascade do |t|
     t.string "content"
     t.bigint "user_id", null: false
+    t.bigint "last_user_commented_id"
     t.bigint "question_id", null: false
+    t.integer "comments_count", default: 0
+    t.string "creation_type"
+    t.string "last_user_commented_type"
+    t.boolean "published", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["last_user_commented_id"], name: "index_answers_on_last_user_commented_id"
     t.index ["question_id"], name: "index_answers_on_question_id"
     t.index ["user_id"], name: "index_answers_on_user_id"
   end
@@ -29,6 +35,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_29_163426) do
     t.bigint "user_id", null: false
     t.string "commented_to_type"
     t.integer "commented_to_id"
+    t.string "creation_type"
+    t.boolean "published", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_comments_on_user_id"
@@ -47,38 +55,66 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_29_163426) do
     t.string "title"
     t.string "content"
     t.bigint "user_id", null: false
+    t.bigint "last_user_commented_id"
+    t.bigint "last_user_answered_id"
     t.integer "views", default: 0
+    t.integer "answers_count", default: 0
+    t.integer "comments_count", default: 0
+    t.string "creation_type"
+    t.string "slug"
+    t.string "last_user_commented_type"
+    t.string "last_user_answered_type"
+    t.boolean "published", default: true
+    t.string "location", default: "EN"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["last_user_answered_id"], name: "index_questions_on_last_user_answered_id"
+    t.index ["last_user_commented_id"], name: "index_questions_on_last_user_commented_id"
+    t.index ["slug"], name: "index_questions_on_slug"
     t.index ["user_id"], name: "index_questions_on_user_id"
   end
 
   create_table "tags", force: :cascade do |t|
     t.string "name"
     t.string "description"
+    t.string "creation_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "clerk_id"
     t.string "name"
-    t.string "user_name"
     t.string "email"
     t.string "password"
-    t.string "bio"
+    t.string "clerk_id"
     t.string "picture"
     t.string "location"
-    t.string "portfolio"
+    t.string "country"
+    t.string "bio"
+    t.string "city"
+    t.string "youtube_link"
+    t.string "linkedin_link"
+    t.string "facebook_link"
+    t.string "instagram_link"
+    t.string "github_link"
+    t.string "x_link"
+    t.string "creation_type"
     t.integer "reputation", default: 0
+    t.integer "answers_count", default: 0
+    t.integer "questions_count", default: 0
+    t.integer "comments_count", default: 0
+    t.boolean "published", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   add_foreign_key "answers", "questions"
   add_foreign_key "answers", "users"
+  add_foreign_key "answers", "users", column: "last_user_commented_id"
   add_foreign_key "comments", "users"
   add_foreign_key "question_tags", "questions"
   add_foreign_key "question_tags", "tags"
   add_foreign_key "questions", "users"
+  add_foreign_key "questions", "users", column: "last_user_answered_id"
+  add_foreign_key "questions", "users", column: "last_user_commented_id"
 end

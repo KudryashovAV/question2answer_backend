@@ -1,17 +1,13 @@
 module Api
   class TagsController < ApplicationController
     def index
-      tags = Tag.all
-      tags = tags.where("lower(name) LIKE '%#{tag_params[:query].downcase}%'") if need_search?
+      tags = if tag_params[:popular] == "true"
+               fetch_popular_tags
+             else
+               search_tags(need_search? ? tag_params[:query].downcase : '')
+             end
 
-      question_tags = QuestionTag.where(question_id: tags.pluck(:id)).group_by(&:tag_id)
-
-      response =
-        tags.map { |tag| tag.attributes.merge(questions_count: question_tags[tag.id].count) }
-                 .sort_by{ |question| question[:questions_count] }
-                 .reverse
-
-      render json: response
+      render json: tags
     end
 
     def show
@@ -42,11 +38,57 @@ module Api
     private
 
     def tag_params
-      params.permit(:query, :page)
+      params.permit(:query, :page, :popular)
     end
 
     def need_search?
       tag_params[:query].present? && tag_params[:query] != "undefined"
+    end
+
+    def fetch_popular_tags
+      sql = <<-SQL
+        SELECT
+        Tags.id,
+        Tags.name,
+        (SELECT COUNT(*) From Question_Tags WHERE question_tags.tag_id = Tags.id) AS questions_count
+        FROM
+        Tags
+        ORDER BY
+        questions_count
+        DESC
+        LIMIT
+        5
+        SQL
+
+      ActiveRecord::Base.connection.execute(sql).to_a
+    end
+
+    def search_tags(query = '')
+      search_sql = <<-SQL
+        SELECT
+        Tags.id,
+        Tags.name,
+        (SELECT COUNT(*) From Question_Tags WHERE question_tags.tag_id = Tags.id) AS questions_count
+        FROM
+        Tags
+        WHERE
+        "lower(name) LIKE '%#{query.downcase}%'
+        ORDER BY
+        questions_count DESC
+      SQL
+
+      without_search_sql = <<-SQL
+        SELECT
+        Tags.id,
+        Tags.name,
+        (SELECT COUNT(*) From Question_Tags WHERE question_tags.tag_id = Tags.id) AS questions_count
+        FROM
+        Tags
+        ORDER BY
+        questions_count DESC
+      SQL
+
+      ActiveRecord::Base.connection.execute(query.blank? ? without_search_sql : search_sql).to_a
     end
   end
 end

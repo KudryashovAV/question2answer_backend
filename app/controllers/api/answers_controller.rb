@@ -3,7 +3,7 @@ module Api
     def index
       answers = Answer.where(question_id: params[:question_id])
 
-      response = answers.map { |answer| answer.attributes.merge(user_name: User.find(answer.user_id).user_name) }
+      response = answers.map { |answer| answer.attributes.merge(user_name: User.find(answer.user_id).name) }
 
       render json: response
     end
