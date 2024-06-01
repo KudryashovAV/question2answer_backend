@@ -82,7 +82,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_01_120410) do
     t.datetime "updated_at", null: false
     t.index ["last_user_answered_id"], name: "index_questions_on_last_user_answered_id"
     t.index ["last_user_commented_id"], name: "index_questions_on_last_user_commented_id"
-    t.index ["slug"], name: "index_questions_on_slug"
+    t.index ["slug"], name: "index_questions_on_slug", unique: true
     t.index ["user_id"], name: "index_questions_on_user_id"
   end
 

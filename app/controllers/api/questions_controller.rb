@@ -11,10 +11,13 @@ module Api
                     .joins(:user, :comments, answers: :comments)
                     .where(answers: { comments: {user_id: user_id}}, comments: {user_id: user_id})
           else
-            Question.select("id, views, slug, title, content, created_at, answers_count").where(user_id: user_id).order(answers_count: :desc)
+            fetch_questions(user_id = nil)
           end
+        elsif need_condition?
+          puts "HERE"
+          fetch_questions_by_condition(question_params[:condition])
         else
-          Question.select("id, title, slug, content, created_at, answers_count").order(answers_count: :desc)
+          fetch_questions(user_id = nil)
         end
 
       questions = questions.where("lower(title) LIKE '%#{question_params[:query].downcase}%'") if need_search?
@@ -72,10 +75,22 @@ module Api
       render json: question.errors.empty? ? question.attributes.merge(status: :success) : { status: :error }
     end
 
+    def destroy
+      question = fetch_question_by_slug(params[:id])
+
+      if question_params["condition"]
+        attr, cond = question_params["condition"].split(":")
+
+        puts "Question.where(#{{attr => cond}}).destroy_all"
+      else
+        puts "question.destroy"
+      end
+    end
+
     private
 
     def question_params
-      params.permit(:query, :page, :user_id, :answers, :popular, :comments)
+      params.permit(:id, :query, :page, :user_id, :answers, :popular, :comments, :condition)
     end
 
     def need_search?
@@ -86,6 +101,10 @@ module Api
       question_params[:user_id].present? && question_params[:user_id] != "undefined"
     end
 
+    def need_condition?
+      question_params[:condition].present? && question_params[:condition] != "undefined"
+    end
+
     def need_popular_questions?
       question_params[:popular].present?
     end
@@ -94,14 +113,34 @@ module Api
       Tag.joins(:question_tags).select(:id, :name, :question_id).where(question_tags: { question_id: question_id })
     end
 
+    def fetch_questions(user_id = nil)
+      if user_id
+        Question.select(question_sql).where(user_id: user_id).order(answers_count: :desc)
+      else
+        Question.select(question_sql).order(answers_count: :desc)
+      end
+    end
+
+    def fetch_questions_by_condition(condition)
+      attr, cond = condition.split(":")
+      Question.select(question_sql).where(attr => cond)
+    end
+
     def fetch_question_by_slug(question_slug)
-      sql = <<-SQL
+      Question.select(question_sql).where(slug: question_slug).first
+    end
+
+    def question_sql
+      <<-SQL
         Questions.id,
         Questions.content,
         Questions.title,
         Questions.slug,
         Questions.created_at,
         Questions.answers_count,
+        Questions.comments_count,
+        Questions.published,
+        Questions.creation_type,
         (
         SELECT
         Users.name
@@ -123,8 +162,6 @@ module Api
         AS
         user_image
       SQL
-
-      Question.select(sql).where(slug: question_slug).first
     end
 
     def fetch_answers_for_question(question_id)

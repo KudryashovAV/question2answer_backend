@@ -10,7 +10,7 @@ class CreateQuestions < ActiveRecord::Migration[7.1]
       t.integer :answers_count, default: 0
       t.integer :comments_count, default: 0
       t.string :creation_type
-      t.string :slug, index: true
+      t.string :slug
       t.string :last_user_commented_type
       t.string :last_user_answered_type
       t.boolean :published, default: true
@@ -18,5 +18,7 @@ class CreateQuestions < ActiveRecord::Migration[7.1]
 
       t.timestamps
     end
+
+    add_index :questions, :slug, unique: true
   end
 end
