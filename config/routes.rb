@@ -15,7 +15,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :questions, only: %i[index show]
-    resources :actions, only: %i[index show]
+    resources :actions, only: %i[index show create]
     resources :users, only: %i[index show]
     resources :comments, only: %i[index show]
     resources :answers, only: %i[index show]
