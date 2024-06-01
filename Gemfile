@@ -17,6 +17,7 @@ gem "tailwindcss-rails", "~> 2.6"
 gem "faker"
 gem "pagy", "~> 8.4"
 gem "devise", "~> 4.9"
+gem "sidekiq", "~> 7.2"
 
 group :development, :test do
   gem "debug", platforms: %i[ mri mswin mswin64 mingw x64_mingw ]

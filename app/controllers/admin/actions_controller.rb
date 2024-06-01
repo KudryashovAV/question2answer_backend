@@ -9,6 +9,7 @@ module Admin
       file = File.open(params["file"])
       file_data = file.read
 
+      UserProcessingJob.perform_now
     end
   end
 end

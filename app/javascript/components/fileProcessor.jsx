@@ -1,9 +1,17 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {PhotoIcon} from "@heroicons/react/16/solid";
+import { toast } from "sonner";
 
 const FileProcessor = ({ type }) => {
   const [fileData, setFileData] = useState("");
   const [dateData, setDateData] = useState("");
+  const [disableSubmit, setDisableSubmit] = useState(true);
+
+  useEffect(() => {
+    if (typeof fileData.name !== "undefined") {
+      setDisableSubmit(false)
+    }
+  }, [dateData, fileData]);
 
   const formSubmitter = async (event) => {
     event.preventDefault()
@@ -20,6 +28,8 @@ const FileProcessor = ({ type }) => {
       body: formData,
       headers: { "X-CSRF-Token": "aaa", "Contetnt-Type":"multipart/form-data" }
     })
+
+    toast.success(`File with ${type} was successfully uploaded. In a few minutes you will see result on the draft ${type} page`);
   }
 
   const handleFile = (files) => {
@@ -69,10 +79,10 @@ const FileProcessor = ({ type }) => {
                           htmlFor="file-upload"
                           className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
                         >
-                          <span>Upload a TXT file</span>
+                          <span>Upload a TXT file{" "}</span>
                           <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={(event) => handleFile(event.target.files)} />
                         </label>
-                        <p className="pl-1">or drag and drop</p>
+                        <p className="pl-1">{typeof fileData.name !== "undefined" ? `Uploaded file ${fileData.name}` : "or drag and drop"}</p>
                       </div>
                     </div>
                   </div>
@@ -83,12 +93,10 @@ const FileProcessor = ({ type }) => {
         </div>
 
         <div className="mt-6 flex items-center justify-center gap-x-6">
-          <button type="button" className="text-sm font-semibold leading-6 text-gray-900">
-            Cancel
-          </button>
           <button
             type="submit"
-            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            disabled={disableSubmit}
+            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-200 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             Process
           </button>

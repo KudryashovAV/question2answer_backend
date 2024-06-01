@@ -1,11 +1,9 @@
-import React, {useState} from "react";
+import React from "react";
 import Navbar from "./navBar";
-import {PhotoIcon} from "@heroicons/react/16/solid";
 import FileProcessor from "./fileProcessor";
+import { Toaster } from "sonner";
 
 const Actions = () => {
-
-
   return (
     <div>
       <Navbar />
@@ -13,7 +11,7 @@ const Actions = () => {
         <FileProcessor type="questions"/>
         <FileProcessor type="users"/>
       </div>
-
+      <Toaster richColors position="top-center" />
     </div>
   );
 }
