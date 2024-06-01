@@ -79,6 +79,6 @@ test:
 #
 production:
   <<: *default
-  database: q2a_back_production
-  username: q2a_back
+  database: q2a_api_production
+  username: q2a_api_root
   password: <%= ENV["Q2A_BACK_DATABASE_PASSWORD"] %>
