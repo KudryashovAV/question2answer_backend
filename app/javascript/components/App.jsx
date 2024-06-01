@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
+import Navbar from "./navBar";
 
-function App() {
-  const [count, setCount] = useState(0);
+const App = () => {
   return (
-    <div >
-      <p className="text-3xl font-bold underline">You clickewwd {count} tiwwmes!!!</p>
-      <button onClick={() => setCount(count + 1)}>Click me</button>
-    </div>
+      <div>
+        <Navbar />
+         <h1>Dashboard</h1>
+      </div>
   );
 }
 

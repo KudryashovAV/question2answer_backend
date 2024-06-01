@@ -77,7 +77,7 @@ Pagy::DEFAULT[:items]       = 12
 # Pagy::DEFAULT[:headers] = { page: 'Current-Page',
 #                            items: 'Page-Items',
 #                            count: 'Total-Count',
-#                            pages: 'Total-Pages' }     # default
+#                            home: 'Total-Pages' }     # default
 
 # Meilisearch extra: Paginate `Meilisearch` result objects
 # See https://ddnexus.github.io/pagy/docs/extras/meilisearch
@@ -145,7 +145,7 @@ Pagy::DEFAULT[:items]       = 12
 # Pagy::DEFAULT[:items_param] = :items   # default
 # Pagy::DEFAULT[:max_items]   = 100      # default
 
-# Overflow extra: Allow for easy handling of overflowing pages
+# Overflow extra: Allow for easy handling of overflowing home
 # See https://ddnexus.github.io/pagy/docs/extras/overflow
 # require 'pagy/extras/overflow'
 # Pagy::DEFAULT[:overflow] = :empty_page    # default  (other options: :last_page and :exception)
