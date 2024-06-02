@@ -5,11 +5,11 @@ module Api
         if need_user_questions?
           user_id = User.find_by(clerk_id: question_params[:user_id]).try(:id)
           if question_params[:answers].present? && question_params[:answers] != "undefined"
-            Question.joins(:answers).where(answers: { user_id: user_id }).order(answers_count: :desc)
+            Question.joins(:answers).where(questions: { published: true }, answers: { published: true, user_id: user_id }).order(answers_count: :desc)
           elsif question_params[:comments].present? && question_params[:comments] != "undefined"
             Question.distinct
                     .joins(:user, :comments, answers: :comments)
-                    .where(answers: { comments: {user_id: user_id}}, comments: {user_id: user_id})
+                    .where(questions: { published: true }, answers: { comments: { published: true, user_id: user_id} }, comments: { published: true, user_id: user_id })
           else
             fetch_questions(user_id = nil)
           end
@@ -115,19 +115,19 @@ module Api
 
     def fetch_questions(user_id = nil)
       if user_id
-        Question.select(question_sql).where(user_id: user_id).order(answers_count: :desc)
+        Question.select(question_sql).where(published: true, user_id: user_id).order(answers_count: :desc)
       else
-        Question.select(question_sql).order(answers_count: :desc)
+        Question.select(question_sql).where(published: true).order(answers_count: :desc)
       end
     end
 
     def fetch_questions_by_condition(condition)
       attr, cond = condition.split(":")
-      Question.select(question_sql).where(attr => cond)
+      Question.select(question_sql).where(attr => cond).where(published: true)
     end
 
     def fetch_question_by_slug(question_slug)
-      Question.select(question_sql).where(slug: question_slug).first
+      Question.select(question_sql).where(published: true, slug: question_slug).first
     end
 
     def question_sql
@@ -195,6 +195,10 @@ module Api
         Answers
         WHERE
         Answers.question_id = #{question_id}
+        AND
+        Answers.published = true
+        AND
+        Answers.reserved = false
         ORDER BY
         Answers.created_at
         DESC
@@ -226,6 +230,10 @@ module Api
         Comments.commented_to_id = #{question_id}
         AND
         Comments.commented_to_type = 'Question'
+        AND
+        Comments.published = true
+        AND
+        Comments.reserved = false
         ORDER BY
         Comments.created_at
         DESC
@@ -257,6 +265,10 @@ module Api
         Comments.commented_to_id IN (#{answer_ids})
         AND
         Comments.commented_to_type = 'Answer'
+        AND
+        Comments.published = true
+        AND
+        Comments.reserved = false
         ORDER BY
         Comments.created_at
         DESC

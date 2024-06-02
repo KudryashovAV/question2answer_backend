@@ -1,7 +1,7 @@
 class Generators
   def generate_entities
     puts "Generation of test data starts!"
-
+    FeatureFlag.create(name: "Is background jobs ready?", enabled: false)
     AdminUser.create({ email: "admin@admin.com", password: "123456"})
     User.create({ email: "admin@admin.com", password: "123456789", location: "en", name: "Mike Vazovski", country: "Mali", city: "Asdert", bio: "admin", creation_type: "text", published: true})
     User.create({ email: "Mike@Vazovski.com", password: "123456789123456", location: "en", name: "Mike Vazovski", country: "Mali", city: "Asdert", bio: "Я успешный бизнесмен, владелец крупной компании в сфере информационных технологий. Начал свою карьеру с небольшого стартапа, который вырос в успешный бизнес благодаря его предпринимательскому духу и стратегическому мышлению. Активно поддерживаю стартап-сообщество и инвестирует в молодые технологические компании.", creation_type: "test", published: true})

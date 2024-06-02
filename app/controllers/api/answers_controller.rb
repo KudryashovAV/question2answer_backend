@@ -1,7 +1,7 @@
 module Api
   class AnswersController < ApplicationController
     def index
-      answers = Answer.where(question_id: params[:question_id])
+      answers = Answer.where(published: true, question_id: params[:question_id])
 
       response = answers.map { |answer| answer.attributes.merge(user_name: User.find(answer.user_id).name) }
 
@@ -13,7 +13,9 @@ module Api
 
       params = JSON.parse(request.raw_post)
 
-      answer = Answer.create(question_id: params["question"],content: params["content"], user_id: params["author"])
+      answer = Answer.create(question_id: params["question"],
+                             content: params["content"],
+                             user_id: params["author"])
 
       user = User.find_by(id: params["author"])
       user.update_column(:answers_count, user.answers_count + 1)

@@ -41,8 +41,8 @@ const FileProcessor = ({ type }) => {
       <form onSubmit={formSubmitter}>
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12 ">
-            <h2 className="text-base font-semibold leading-7 text-gray-900">Upload {type} for processing</h2>
-            <p className="mt-1 text-sm leading-6 text-gray-600">
+            <h1 className="text-base font-bold leading-7 text-gray-900">Upload {type} for processing</h1>
+            <p className="mt-1 leading-6 text-gray-600">
               Upload file with {type} for processing and displaying them on WAnswers site.
             </p>
 
