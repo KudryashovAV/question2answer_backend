@@ -7,6 +7,7 @@ class CreateComments < ActiveRecord::Migration[7.1]
       t.integer :commented_to_id
       t.string :creation_type
       t.boolean :published, default: true
+      t.boolean :reserved, default: true
 
       t.timestamps
     end

@@ -9,6 +9,7 @@ class CreateAnswers < ActiveRecord::Migration[7.1]
       t.string :creation_type
       t.string :last_user_commented_type
       t.boolean :published, default: true
+      t.boolean :reserved, default: true
 
       t.timestamps
     end

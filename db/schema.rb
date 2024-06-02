@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_01_120410) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_02_174112) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -35,6 +35,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_01_120410) do
     t.string "creation_type"
     t.string "last_user_commented_type"
     t.boolean "published", default: true
+    t.boolean "reserved", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["last_user_commented_id"], name: "index_answers_on_last_user_commented_id"
@@ -49,9 +50,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_01_120410) do
     t.integer "commented_to_id"
     t.string "creation_type"
     t.boolean "published", default: true
+    t.boolean "reserved", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "feature_flags", force: :cascade do |t|
+    t.string "name", null: false
+    t.boolean "enabled", default: true
   end
 
   create_table "question_tags", force: :cascade do |t|

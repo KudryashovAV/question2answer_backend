@@ -21,7 +21,6 @@ const FileProcessor = ({ type }) => {
     formData.append("duration", dateData)
     formData.append("type", type)
 
-
     await fetch(`/admin/actions`, {
       cache: "no-store",
       method: "POST",

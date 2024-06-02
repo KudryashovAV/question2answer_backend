@@ -18,6 +18,7 @@ gem "faker"
 gem "pagy", "~> 8.4"
 gem "devise", "~> 4.9"
 gem "sidekiq", "~> 7.2"
+gem "sidekiq-cron"
 
 group :development, :test do
   gem "debug", platforms: %i[ mri mswin mswin64 mingw x64_mingw ]

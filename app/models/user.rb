@@ -1,7 +1,7 @@
 class User < ApplicationRecord
-  has_many :answers
-  has_many :comments
-  has_many :questions
+  has_many :answers, dependent: :nullify
+  has_many :comments, dependent: :nullify
+  has_many :questions, dependent: :nullify
 
   validates :email, uniqueness: true
 end
