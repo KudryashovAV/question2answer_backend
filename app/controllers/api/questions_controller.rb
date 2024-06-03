@@ -5,11 +5,16 @@ module Api
         if need_user_questions?
           user_id = User.find_by(id: question_params[:user_id]).try(:id)
           if question_params[:answers].present? && question_params[:answers] != "undefined"
-            Question.joins(:answers).where(questions: { published: true }, answers: { published: true, user_id: user_id }).order(answers_count: :desc)
+            Question.joins(:answers)
+                    .where(questions: { published: true, location: location },
+                           answers: { published: true, user_id: user_id })
+                    .order(answers_count: :desc)
           elsif question_params[:comments].present? && question_params[:comments] != "undefined"
             Question.distinct
                     .joins(:user, :comments, answers: :comments)
-                    .where(questions: { published: true }, answers: { comments: { published: true, user_id: user_id} }, comments: { published: true, user_id: user_id })
+                    .where(questions: { published: true, location: location },
+                           answers: { comments: { published: true, user_id: user_id} },
+                           comments: { published: true, user_id: user_id })
           else
             fetch_questions(user_id = nil)
           end
@@ -23,7 +28,7 @@ module Api
 
       pagy, records = pagy(questions, page: question_params[:page] || 1)
 
-      question_collection = need_popular_questions? ? records.first(5) : records
+      question_collection = need_popular_questions? ? fetch_popular_records : records
 
       tags = fetch_tags(question_collection.pluck(:id)).group_by(&:question_id)
 
@@ -95,7 +100,11 @@ module Api
     private
 
     def question_params
-      params.permit(:id, :query, :page, :user_id, :answers, :popular, :comments, :condition)
+      params.permit(:id, :query, :page, :user_id, :answers, :popular, :comments, :condition, :location)
+    end
+
+    def location
+      question_params["location"] ? question_params["location"].upcase : ["RU", "EN"]
     end
 
     def need_search?
@@ -118,11 +127,15 @@ module Api
       Tag.joins(:question_tags).select(:id, :name, :question_id).where(question_tags: { question_id: question_id })
     end
 
+    def fetch_popular_records
+      Question.select(:id, :title, :slug).where(published: true, location: location).order(answers_count: :desc).limit(5)
+    end
+
     def fetch_questions(user_id = nil)
       if user_id
-        Question.select(question_sql).where(published: true, user_id: user_id).order(answers_count: :desc)
+        Question.select(question_sql).where(published: true, user_id: user_id, location: location).order(answers_count: :desc)
       else
-        Question.select(question_sql).where(published: true).order(answers_count: :desc)
+        Question.select(question_sql).where(published: true, location: location).order(answers_count: :desc)
       end
     end
 
@@ -136,7 +149,7 @@ module Api
     end
 
     def fetch_question_by_slug(question_slug)
-      Question.select(question_sql).where(published: true, slug: question_slug).first
+      Question.select(question_sql).where(published: true, slug: question_slug, location: location).first
     end
 
     def question_sql

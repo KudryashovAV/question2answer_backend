@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     resources :comments, only:  %i[index create]
     resources :questions
     resources :question_tags, only: :create
+    resources :admin, only: %i[index update destroy]
     resources :tags, only: %i[index show create]
     resources :users, only: %i[index show create update]
 

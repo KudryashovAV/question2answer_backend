@@ -47,7 +47,7 @@ function Navbar() {
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
-                  <img className="h-10 w-auto" src="site-logo.svg" alt="WAnswers" />
+                  <img className="h-10 w-auto" src="/images/site-logo.svg" alt="WAnswers" />
                   <p className="h2-bold font-spaceGrotesk max-sm:hidden text-3xl text-white">
                     W<span className="text-orange-500">Answers</span>
                   </p>

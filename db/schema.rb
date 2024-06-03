@@ -28,14 +28,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_174112) do
 
   create_table "answers", force: :cascade do |t|
     t.string "content"
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.bigint "last_user_commented_id"
     t.bigint "question_id", null: false
     t.integer "comments_count", default: 0
     t.string "creation_type"
     t.string "last_user_commented_type"
     t.boolean "published", default: true
-    t.boolean "reserved", default: true
+    t.boolean "reserved", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["last_user_commented_id"], name: "index_answers_on_last_user_commented_id"
@@ -45,12 +45,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_174112) do
 
   create_table "comments", force: :cascade do |t|
     t.string "content"
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.string "commented_to_type"
     t.integer "commented_to_id"
     t.string "creation_type"
     t.boolean "published", default: true
-    t.boolean "reserved", default: true
+    t.boolean "reserved", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_comments_on_user_id"
@@ -73,7 +73,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_174112) do
   create_table "questions", force: :cascade do |t|
     t.string "title"
     t.string "content"
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.bigint "last_user_commented_id"
     t.bigint "last_user_answered_id"
     t.integer "views", default: 0

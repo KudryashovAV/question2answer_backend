@@ -8,7 +8,7 @@ module Api
         (SELECT COUNT(*) FROM comments WHERE comments.user_id = users.id) AS c_count
       SQL
 
-      users = User.select(sql).order(q_count: :desc)
+      users = User.select(sql).where(published: true).order(q_count: :desc)
       users = users.where("lower(name) LIKE '%#{user_params[:query].downcase}%'") if need_search?
 
       pagy, response = pagy(users, page: user_params[:page] || 1)
@@ -23,7 +23,7 @@ module Api
     end
 
     def user_info
-      user = User.find_by(id: params[:id])
+      user = User.find_by(id: params[:id], published: true)
 
       return render(json: []) if user.blank?
 
