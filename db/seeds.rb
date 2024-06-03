@@ -3,7 +3,6 @@ class Generators
     puts "Generation of test data starts!"
     FeatureFlag.create(name: "Is background jobs ready?", enabled: false)
     AdminUser.create({ email: "admin@admin.com", password: "123456"})
-    User.create({ email: "admin@admin.com", password: "123456789", location: "en", name: "Mike Vazovski", country: "Mali", city: "Asdert", bio: "admin", creation_type: "text", published: true})
     User.create({ email: "Mike@Vazovski.com", password: "123456789123456", location: "en", name: "Mike Vazovski", country: "Mali", city: "Asdert", bio: "Я успешный бизнесмен, владелец крупной компании в сфере информационных технологий. Начал свою карьеру с небольшого стартапа, который вырос в успешный бизнес благодаря его предпринимательскому духу и стратегическому мышлению. Активно поддерживаю стартап-сообщество и инвестирует в молодые технологические компании.", creation_type: "test", published: true})
     User.create({ email: "Stive@Dou.com", password: "123456789123456", location: "en", name: "Stive Dou", country: "Mali", city: "Asdert", bio: "Я успешный бизнесмен, владелец крупной компании в сфере информационных технологий. Начал свою карьеру с небольшого стартапа, который вырос в успешный бизнес благодаря его предпринимательскому духу и стратегическому мышлению. Активно поддерживаю стартап-сообщество и инвестирует в молодые технологические компании.", creation_type: "test", published: true})
     User.create({ email: "John@Dou.com", password: "123456789123456", location: "en", name: "John Dou", country: "Russia", city: "Moscow", bio: "Я успешный бизнесмен, владелец крупной компании в сфере информационных технологий. Начал свою карьеру с небольшого стартапа, который вырос в успешный бизнес благодаря его предпринимательскому духу и стратегическому мышлению. Активно поддерживаю стартап-сообщество и инвестирует в молодые технологические компании.", creation_type: "test", published: true})
@@ -67,7 +66,7 @@ class Generators
     tag_ids = Tag.all.pluck(:id)
     user_ids = User.all.pluck(:id)
 
-    100.times do |number|
+    50.times do |number|
       ru_title = "РУССКИЙ #{Faker::Lorem.question(word_count: (4...15).to_a.sample)}"
       ru_location = "RU"
       en_title = Faker::Lorem.question(word_count: (4...15).to_a.sample)
@@ -87,7 +86,7 @@ class Generators
     users = User.all
 
     users.each do |user|
-      content_array << "email:#{user.email}!@#password:#{user.password}!@#location:#{user.location}!@#name:#{user.name}!@#country:#{user.country}!@#city:#{user.city}!@#bio:#{user.bio}"
+      content_array << "email:generated#{user.email}!@#password:#{user.password}!@#location:#{user.location}!@#name:#{user.name}!@#country:#{user.country}!@#city:#{user.city}!@#bio:#{user.bio}"
     end
 
     content = content_array.join("\n ")
@@ -106,7 +105,7 @@ class Generators
       question_comments = question.comments
       question_answers = question.answers
 
-      question_substring = "-{Question}-title:#{question.title}!@#content:#{question.content}!@#location:#{question.location}"
+      question_substring = "-{Question}-title:generated#{question.title}!@#content:#{question.content}!@#location:#{question.location}"
       question_comments_substring = ""
       question_comments.each { |comment| question_comments_substring << "-{QComment}-content:#{comment.content}"}
 
@@ -154,12 +153,10 @@ class Generators
 
     answer_count = (1..10).to_a.sample
     answered_user_ids = []
-    last_user_answered_id = 0
 
     answer_count.times do
       current_answered_user_id = (user_ids - [question_user_id] - answered_user_ids).sample
       answered_user_ids << current_answered_user_id
-      last_user_answered_id = current_answered_user_id
 
       answer = Answer.create(
         question: question,
@@ -194,19 +191,16 @@ class Generators
       end
 
       answer.update_columns(comments_count: comment_count,
-                            last_user_commented_id: last_user_answer_commented_id,
                             last_user_commented_type: "test")
 
     end
 
     question_comments_count = (1..5).to_a.sample
     question_commented_user_ids = []
-    last_user_commented_id = 0
 
     question_comments_count.times do
       current_commented_user_id = (user_ids - [question_user_id] - question_commented_user_ids).sample
       question_commented_user_ids << current_commented_user_id
-      last_user_commented_id = current_commented_user_id
 
       Comment.create(
         commented_to: question,
@@ -229,8 +223,6 @@ class Generators
 
     question.update_columns(answers_count: answer_count,
                             comments_count: question_comments_count,
-                            last_user_commented_id: last_user_commented_id,
-                            last_user_answered_id: last_user_answered_id,
                             last_user_commented_type: "test",
                             last_user_answered_type: "test")
 

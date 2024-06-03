@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Disclosure,
   DisclosureButton,
@@ -6,15 +6,13 @@ import {
 } from "@headlessui/react"
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
 
-
 function Navbar() {
   const navigation = [
-    { name: "Dashboard", href: "/", current: false },
-    { name: "Questions", href: "/admin/questions", current: false },
-    { name: "Users", href: "/admin/users", current: false },
-    { name: "Answers", href: "/admin/answers", current: false },
-    { name: "Comments", href: "/admin/comments", current: false },
-    { name: "Actions", href: "/admin/actions", current: false },
+    { name: "Questions", href: "/admin/questions", current: window.location.href.split("/")[4] === "questions" },
+    { name: "Users", href: "/admin/users", current: window.location.href.split("/")[4] === "users" },
+    { name: "Answers", href: "/admin/answers", current: window.location.href.split("/")[4] === "answers" },
+    { name: "Comments", href: "/admin/comments", current: window.location.href.split("/")[4] === "comments" },
+    { name: "Actions", href: "/admin/actions", current: window.location.href.split("/")[4] === "actions" },
   ]
 
   function classNames(...classes) {

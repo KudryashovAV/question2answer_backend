@@ -74,13 +74,13 @@ class QuestionEntitiesCreatorFromTxt
       # start of comments creation for question
       begin
         question_commented_user_ids = []
-        last_user_commented_id = 0
+
         q_comments_count = 0
 
         q_comments_attrs.each do |q_comment_attrs|
           current_commented_user_id = (user_ids - [question_user_id] - question_commented_user_ids).sample
           question_commented_user_ids << current_commented_user_id
-          last_user_commented_id = current_commented_user_id
+
 
           q_comment = Comment.new
 
@@ -117,7 +117,6 @@ class QuestionEntitiesCreatorFromTxt
       # start of answers creation
 
       answered_user_ids = []
-      last_user_answered_id = 0
       q_answers_count = 0
 
       answers_data.each do |answer_data|
@@ -128,7 +127,6 @@ class QuestionEntitiesCreatorFromTxt
 
         current_answered_user_id = (user_ids - [question_user_id] - answered_user_ids).sample
         answered_user_ids << current_answered_user_id
-        last_user_answered_id = current_answered_user_id
 
         answer = Answer.new
 
@@ -208,7 +206,6 @@ class QuestionEntitiesCreatorFromTxt
           end
 
           answer.update_columns(comments_count: a_comments_count,
-                                last_user_commented_id: last_user_answer_commented_id,
                                 last_user_commented_type: "generated")
         end
         # finish of comments creation for answer
@@ -229,8 +226,6 @@ class QuestionEntitiesCreatorFromTxt
 
       question.update_columns(answers_count: q_answers_count,
                               comments_count: q_comments_count,
-                              last_user_commented_id: last_user_commented_id,
-                              last_user_answered_id: last_user_answered_id,
                               last_user_commented_type: "generated",
                               last_user_answered_type: "generated")
     end

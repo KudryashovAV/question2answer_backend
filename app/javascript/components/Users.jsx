@@ -104,14 +104,14 @@ const Users = () => {
           <div className="ml-5 flex flex-row max-sm:flex-col">
             {(condition === "creation_type:test" || condition === "") && (<button
               className="mx-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-200 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onClick={() => deleteQuestions("creation_type:test")}
+              onClick={() => deleteQuestions("creation_type:test", "user_page")}
             >
               Remove all test users
             </button>)}
 
             {(condition === "published:false" || condition === "") && (<button
               className="mx-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-200 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onClick={() => publishQuestions("all")}
+              onClick={() => publishQuestions("all", "user_page")}
             >
               Publish users
             </button>)}

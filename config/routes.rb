@@ -3,7 +3,7 @@ require "sidekiq/web"
 Rails.application.routes.draw do
   mount Sidekiq::Web => "/sidekiq"
   devise_for :admin_users
-  root "admin/home#index"
+  root "admin/actions#index"
 
   namespace :api do
     resources :answers, only:  %i[index create]

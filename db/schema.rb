@@ -29,7 +29,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_174112) do
   create_table "answers", force: :cascade do |t|
     t.string "content"
     t.bigint "user_id"
-    t.bigint "last_user_commented_id"
     t.bigint "question_id", null: false
     t.integer "comments_count", default: 0
     t.string "creation_type"
@@ -38,7 +37,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_174112) do
     t.boolean "reserved", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["last_user_commented_id"], name: "index_answers_on_last_user_commented_id"
     t.index ["question_id"], name: "index_answers_on_question_id"
     t.index ["user_id"], name: "index_answers_on_user_id"
   end
@@ -74,8 +72,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_174112) do
     t.string "title"
     t.string "content"
     t.bigint "user_id"
-    t.bigint "last_user_commented_id"
-    t.bigint "last_user_answered_id"
     t.integer "views", default: 0
     t.integer "answers_count", default: 0
     t.integer "comments_count", default: 0
@@ -87,8 +83,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_174112) do
     t.string "location", default: "EN"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["last_user_answered_id"], name: "index_questions_on_last_user_answered_id"
-    t.index ["last_user_commented_id"], name: "index_questions_on_last_user_commented_id"
     t.index ["slug"], name: "index_questions_on_slug", unique: true
     t.index ["user_id"], name: "index_questions_on_user_id"
   end
@@ -130,11 +124,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_174112) do
 
   add_foreign_key "answers", "questions"
   add_foreign_key "answers", "users"
-  add_foreign_key "answers", "users", column: "last_user_commented_id"
   add_foreign_key "comments", "users"
   add_foreign_key "question_tags", "questions"
   add_foreign_key "question_tags", "tags"
   add_foreign_key "questions", "users"
-  add_foreign_key "questions", "users", column: "last_user_answered_id"
-  add_foreign_key "questions", "users", column: "last_user_commented_id"
 end

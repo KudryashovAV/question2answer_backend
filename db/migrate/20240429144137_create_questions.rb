@@ -4,8 +4,6 @@ class CreateQuestions < ActiveRecord::Migration[7.1]
       t.string :title
       t.string :content
       t.references :user, null: true, foreign_key: true
-      t.references :last_user_commented, foreign_key: { to_table: :users }
-      t.references :last_user_answered, foreign_key: { to_table: :users }
       t.integer :views, default: 0
       t.integer :answers_count, default: 0
       t.integer :comments_count, default: 0
