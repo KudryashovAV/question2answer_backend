@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import Navbar from "./navBar";
-import { FaSearch } from "react-icons/fa";
+import { FaLongArrowAltDown, FaLongArrowAltUp, FaSearch } from "react-icons/fa";
 import {Input} from "@headlessui/react";
 import Pagination from "./pagination";
 
@@ -9,9 +9,10 @@ const Questions = () => {
   const [page, setPage] = useState(1);
   const [condition, setCondition] = useState("");
   const [responce, setSetResponce] = useState({});
+  const [sortOption, setSortOption] = useState("");
 
   const getResponce = async (page, query, condition) => { await fetch(
-    `/api/questions?query=${query || "undefined"}&page=${page}&condition=${condition}`,
+    `/api/questions?query=${query || "undefined"}&page=${page}&condition=${condition}&sort_by=${sortOption}`,
     {cache: "no-store"},
     ).then(async (response) => { setSetResponce(await response.json()) });
   }
@@ -30,10 +31,17 @@ const Questions = () => {
 
   useEffect(() => {
     getResponce(page, query, condition);
-  }, [query, page, condition]);
+  }, [query, page, condition, sortOption]);
 
   const { questions, total_pages, total_records } = responce
   const isNext = total_records > 12 && page <= total_pages;
+
+  const dateFormatter = (date) => {
+    const formattedDate = date.split("T")[0]
+    const formattedTime = date.split("T")[1].split(".")[0]
+
+    return formattedDate + " at " + formattedTime
+  }
 
   return (
     <div>
@@ -118,6 +126,81 @@ const Questions = () => {
           </div>
         </div>
 
+        <div className="mt-10 flex flex-col">
+          <div className="ml-5 mb-1" >Sort by:</div>
+          <div className="ml-5 flex flex-row max-sm:flex-col">
+            <div className="mx-5 flex flex-row max-sm:flex-col border-x b-b">
+              <div
+                className={`text-indigo-600 text-lg font-bold p-1`}
+              >
+                Created at
+              </div>
+              <div className="ml-1 flex flex-row max-sm:flex-col">
+                <button
+                  className={`${sortOption === "created_at:desc" ? "bg-orange-600" : "bg-indigo-600"} rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-200 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                  onClick={() => setSortOption("created_at:desc")}
+                >
+                  <FaLongArrowAltDown />
+                </button>
+              </div>
+              <div className="ml-1 flex flex-row max-sm:flex-col">
+                <button
+                  className={`${sortOption === "created_at:asc" ? "bg-orange-600" : "bg-indigo-600"} rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-200 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                  onClick={() => setSortOption("created_at:asc")}
+                >
+                  <FaLongArrowAltUp />
+                </button>
+              </div>
+            </div>
+            <div className="mx-5 flex flex-row max-sm:flex-col border-x b-b">
+              <div
+                className={`text-indigo-600 text-lg font-bold p-1`}
+              >
+                Title
+              </div>
+              <div className="ml-1 flex flex-row max-sm:flex-col">
+                <button
+                  className={`${sortOption === "title:desc" ? "bg-orange-600" : "bg-indigo-600"} rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-200 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                  onClick={() => setSortOption("title:desc")}
+                >
+                  <FaLongArrowAltDown />
+                </button>
+              </div>
+              <div className="ml-1 flex flex-row max-sm:flex-col">
+                <button
+                  className={`${sortOption === "title:asc" ? "bg-orange-600" : "bg-indigo-600"} rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-200 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                  onClick={() => setSortOption("title:asc")}
+                >
+                  <FaLongArrowAltUp />
+                </button>
+              </div>
+            </div>
+            <div className="mx-5 flex flex-row max-sm:flex-col border-x b-b">
+              <div
+                className={`text-indigo-600 text-lg font-bold p-1`}
+              >
+                User name
+              </div>
+              <div className="ml-1 flex flex-row max-sm:flex-col">
+                <button
+                  className={`${sortOption === "user_name:desc" ? "bg-orange-600" : "bg-indigo-600"} rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-200 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                  onClick={() => setSortOption("user_name:desc")}
+                >
+                  <FaLongArrowAltDown />
+                </button>
+              </div>
+              <div className="ml-1 flex flex-row max-sm:flex-col">
+                <button
+                  className={`${sortOption === "user_name:asc" ? "bg-orange-600" : "bg-indigo-600"} rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-200 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                  onClick={() => setSortOption("user_name:asc")}
+                >
+                  <FaLongArrowAltUp />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="mt-10 flex flex-col gap-5">
           {questions?.length > 0 ? (
               <div className="px-4 sm:px-6 lg:px-8">
@@ -132,6 +215,12 @@ const Questions = () => {
                             className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8"
                           >
                             Title
+                          </th>
+                          <th
+                            scope="col"
+                            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8"
+                          >
+                            Created_at
                           </th>
                           <th
                             scope="col"
@@ -178,13 +267,18 @@ const Questions = () => {
                               {question.title}
                             </td>
                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
+                              {dateFormatter(question.created_at)}
+                            </td>
+                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
                               {question.published.toString()}
                             </td>
                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
                               {question.creation_type}
                             </td>
                             <td className="whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
-                              {question.user_name || "User NAME"}
+                              <a href={`https://wanswers.com/profile/${question.user_id}`} className="text-indigo-600 hover:text-indigo-900">
+                                {question.user_name || "Deleted user"}
+                              </a>
                             </td>
                             <td className="whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
                               {question.answers_count}

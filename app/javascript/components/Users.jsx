@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import Navbar from "./navBar";
-import { FaSearch } from "react-icons/fa";
+import { FaLongArrowAltDown, FaLongArrowAltUp, FaSearch } from "react-icons/fa";
 import {Input} from "@headlessui/react";
 import Pagination from "./pagination";
 
@@ -9,9 +9,10 @@ const Users = () => {
   const [page, setPage] = useState(1);
   const [condition, setCondition] = useState("");
   const [responce, setSetResponce] = useState({});
+  const [sortOption, setSortOption] = useState("");
 
   const getResponce = async (page, query, condition, page_type) => { await fetch(
-    `/api/admin?query=${query || "undefined"}&page=${page}&condition=${condition}&page_type=${page_type}`,
+    `/api/admin?query=${query || "undefined"}&page=${page}&condition=${condition}&page_type=${page_type}&sort_by=${sortOption}`,
     {cache: "no-store"},
   ).then(async (response) => { setSetResponce(await response.json()) });
   }
@@ -30,7 +31,7 @@ const Users = () => {
 
   useEffect(() => {
     getResponce(page, query, condition, "user_page");
-  }, [query, page, condition]);
+  }, [query, page, condition, sortOption]);
 
   const { users, total_pages, total_records } = responce
   const isNext = total_records > 12 && page <= total_pages;
@@ -118,6 +119,104 @@ const Users = () => {
           </div>
         </div>
 
+        <div className="mt-10 flex flex-col">
+          <div className="ml-5 mb-1" >Sort by:</div>
+          <div className="ml-5 flex flex-row max-sm:flex-col">
+            <div className="mx-5 flex flex-row max-sm:flex-col border-x b-b">
+              <div
+                className={`text-indigo-600 text-lg font-bold p-1`}
+              >
+                Questions count
+              </div>
+              <div className="ml-1 flex flex-row max-sm:flex-col">
+                <button
+                  className={`${sortOption === "q_count:desc" ? "bg-orange-600" : "bg-indigo-600"} rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-200 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                  onClick={() => setSortOption("q_count:desc")}
+                >
+                  <FaLongArrowAltDown />
+                </button>
+              </div>
+              <div className="ml-1 flex flex-row max-sm:flex-col">
+                <button
+                  className={`${sortOption === "q_count:asc" ? "bg-orange-600" : "bg-indigo-600"} rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-200 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                  onClick={() => setSortOption("q_count:asc")}
+                >
+                  <FaLongArrowAltUp />
+                </button>
+              </div>
+            </div>
+            <div className="mx-5 flex flex-row max-sm:flex-col border-x b-b">
+              <div
+                className={`text-indigo-600 text-lg font-bold p-1`}
+              >
+                Answers count
+              </div>
+              <div className="ml-1 flex flex-row max-sm:flex-col">
+                <button
+                  className={`${sortOption === "a_count:desc" ? "bg-orange-600" : "bg-indigo-600"} rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-200 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                  onClick={() => setSortOption("a_count:desc")}
+                >
+                  <FaLongArrowAltDown />
+                </button>
+              </div>
+              <div className="ml-1 flex flex-row max-sm:flex-col">
+                <button
+                  className={`${sortOption === "a_count:asc" ? "bg-orange-600" : "bg-indigo-600"} rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-200 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                  onClick={() => setSortOption("a_count:asc")}
+                >
+                  <FaLongArrowAltUp />
+                </button>
+              </div>
+            </div>
+            <div className="mx-5 flex flex-row max-sm:flex-col border-x b-b">
+              <div
+                className={`text-indigo-600 text-lg font-bold p-1`}
+              >
+                Comments count
+              </div>
+              <div className="ml-1 flex flex-row max-sm:flex-col">
+                <button
+                  className={`${sortOption === "c_count:desc" ? "bg-orange-600" : "bg-indigo-600"} rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-200 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                  onClick={() => setSortOption("c_count:desc")}
+                >
+                  <FaLongArrowAltDown />
+                </button>
+              </div>
+              <div className="ml-1 flex flex-row max-sm:flex-col">
+                <button
+                  className={`${sortOption === "c_count:asc" ? "bg-orange-600" : "bg-indigo-600"} rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-200 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                  onClick={() => setSortOption("c_count:asc")}
+                >
+                  <FaLongArrowAltUp />
+                </button>
+              </div>
+            </div>
+            <div className="mx-5 flex flex-row max-sm:flex-col border-x b-b">
+              <div
+                className={`text-indigo-600 text-lg font-bold p-1`}
+              >
+                User name
+              </div>
+              <div className="ml-1 flex flex-row max-sm:flex-col">
+                <button
+                  className={`${sortOption === "name:desc" ? "bg-orange-600" : "bg-indigo-600"} rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-200 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                  onClick={() => setSortOption("name:desc")}
+                >
+                  <FaLongArrowAltDown />
+                </button>
+              </div>
+              <div className="ml-1 flex flex-row max-sm:flex-col">
+                <button
+                  className={`${sortOption === "name:asc" ? "bg-orange-600" : "bg-indigo-600"} rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-200 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                  onClick={() => setSortOption("name:asc")}
+                >
+                  <FaLongArrowAltUp />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="mt-10 flex flex-col gap-5">
           {users?.length > 0 ? (
             <div className="px-4 sm:px-6 lg:px-8">
@@ -193,13 +292,13 @@ const Users = () => {
                             {user.email || "User NAME"}
                           </td>
                           <td className="whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
-                            {user.questions_count}
+                            {user.q_count}
                           </td>
                           <td className="whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
-                            {user.answers_count}
+                            {user.a_count}
                           </td>
                           <td className="whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
-                            {user.comments_count}
+                            {user.c_count}
                           </td>
                           <td className="relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-8 lg:pr-8">
                             <a href={`https://wanswers.com/profile/${user.id}`} className="text-indigo-600 hover:text-indigo-900">

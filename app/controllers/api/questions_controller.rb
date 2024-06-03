@@ -141,11 +141,17 @@ module Api
 
     def fetch_questions_by_condition(condition)
       if condition.blank?
-        Question.select(question_sql)
+        questions = Question.select(question_sql)
       else
         attr, cond = condition.split(":")
-        Question.select(question_sql).where(attr => cond)
+        questions = Question.select(question_sql).where(attr => cond)
       end
+
+      if params["sort_by"].present?
+        attr, cond = params["sort_by"].split(":")
+        questions = questions.order("#{attr} #{cond.upcase}")
+      end
+      questions
     end
 
     def fetch_question_by_slug(question_slug)
@@ -159,6 +165,7 @@ module Api
         Questions.title,
         Questions.slug,
         Questions.created_at,
+        Questions.user_id,
         Questions.answers_count,
         Questions.comments_count,
         Questions.published,
