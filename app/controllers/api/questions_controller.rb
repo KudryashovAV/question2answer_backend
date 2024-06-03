@@ -30,7 +30,7 @@ module Api
 
       question_collection = need_popular_questions? ? fetch_popular_records : records
 
-      tags = fetch_tags(question_collection.pluck(:id)).group_by(&:question_id)
+      tags = fetch_tags(question_collection.map(&:id)).group_by(&:question_id)
 
       response = question_collection.map { |qstn| qstn.attributes.merge(tags: tags[qstn.id]) }
 

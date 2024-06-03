@@ -33,7 +33,7 @@ const Answers = () => {
 
   const dateFormatter = (date) => {
     const formattedDate = date.split("T")[0]
-    const formattedTime = date.split("T")[1].spit(".")[0]
+    const formattedTime = date.split("T")[1].split(".")[0]
 
     return formattedDate + " at " + formattedTime
   }
