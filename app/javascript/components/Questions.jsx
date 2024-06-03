@@ -193,7 +193,7 @@ const Questions = () => {
                               {question.comments_count}
                             </td>
                             <td className="relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-8 lg:pr-8">
-                              <a href="#" className="text-indigo-600 hover:text-indigo-900">
+                              <a href={`https://wanswers.com/question/${question.slug}`} className="text-indigo-600 hover:text-indigo-900">
                                 {"Show >>"}
                               </a>
                             </td>

@@ -3,7 +3,7 @@ module Api
     def index
       questions =
         if need_user_questions?
-          user_id = User.find_by(clerk_id: question_params[:user_id]).try(:id)
+          user_id = User.find_by(id: question_params[:user_id]).try(:id)
           if question_params[:answers].present? && question_params[:answers] != "undefined"
             Question.joins(:answers).where(questions: { published: true }, answers: { published: true, user_id: user_id }).order(answers_count: :desc)
           elsif question_params[:comments].present? && question_params[:comments] != "undefined"
