@@ -14,7 +14,6 @@ module Api
             fetch_questions(user_id = nil)
           end
         elsif need_condition?
-          puts "HERE"
           fetch_questions_by_condition(question_params[:condition])
         else
           fetch_questions(user_id = nil)
@@ -75,15 +74,21 @@ module Api
       render json: question.errors.empty? ? question.attributes.merge(status: :success) : { status: :error }
     end
 
+    def update
+      if params["type"] == "all"
+        Question.update_all(published: true)
+      end
+    end
+
     def destroy
       question = fetch_question_by_slug(params[:id])
 
-      if question_params["condition"]
+      if question_params["condition"].blank?
+        question.destroy
+      else
         attr, cond = question_params["condition"].split(":")
 
-        puts "Question.where(#{{attr => cond}}).destroy_all"
-      else
-        puts "question.destroy"
+        Question.where(attr => cond).destroy_all
       end
     end
 
@@ -102,7 +107,7 @@ module Api
     end
 
     def need_condition?
-      question_params[:condition].present? && question_params[:condition] != "undefined"
+      question_params[:condition] && question_params[:condition] != "undefined"
     end
 
     def need_popular_questions?
@@ -122,8 +127,12 @@ module Api
     end
 
     def fetch_questions_by_condition(condition)
-      attr, cond = condition.split(":")
-      Question.select(question_sql).where(attr => cond).where(published: true)
+      if condition.blank?
+        Question.select(question_sql)
+      else
+        attr, cond = condition.split(":")
+        Question.select(question_sql).where(attr => cond)
+      end
     end
 
     def fetch_question_by_slug(question_slug)

@@ -7,7 +7,7 @@ import Pagination from "./pagination";
 const Questions = () => {
   const [query, setQuery] = useState(null);
   const [page, setPage] = useState(1);
-  const [condition, setCondition] = useState("undefined");
+  const [condition, setCondition] = useState("");
   const [responce, setSetResponce] = useState({});
 
   const getResponce = async (page, query, condition) => { await fetch(
@@ -19,6 +19,12 @@ const Questions = () => {
   const deleteQuestions = async (condition, id = 1) => { await fetch(
     `/api/questions/${id}?condition=${condition}`,
     {method: "DELETE"},
+    ).then(() => { window.location.reload() });
+  }
+
+  const publishQuestions = async (type, id = 1) => { await fetch(
+    `/api/questions/${id}?type=${type}`,
+    {method: "PATCH"},
   ).then(() => { window.location.reload() });
   }
 
@@ -55,37 +61,37 @@ const Questions = () => {
           <div className="ml-5 mb-1" >Filters:</div>
           <div className="ml-5 flex flex-row max-sm:flex-col">
             <div
-              className="text-indigo-600 text-lg font-bold hover:bg-gray-100 hover:cursor-pointer p-1 border-x border-b"
+              className={`${condition === "creation_type:test" ? "bg-gray-200" : ""} text-indigo-600 text-lg font-bold hover:bg-gray-100 hover:cursor-pointer p-1 border-x border-b`}
               onClick={() => setCondition("creation_type:test")}
             >
               Test questions
             </div>
             <div
-              className="text-indigo-600 text-lg font-bold hover:bg-gray-100 hover:cursor-pointer p-1 border-x border-b"
+              className={`${condition === "creation_type:generated" ? "bg-gray-200" : ""} text-indigo-600 text-lg font-bold hover:bg-gray-100 hover:cursor-pointer p-1 border-x border-b`}
               onClick={() => setCondition("creation_type:generated")}
             >
               Generated questions
             </div>
             <div
-              className="text-indigo-600 text-lg font-bold hover:bg-gray-100 hover:cursor-pointer p-1 border-x border-b"
+              className={`${condition === "published:false" ? "bg-gray-200" : ""} text-indigo-600 text-lg font-bold hover:bg-gray-100 hover:cursor-pointer p-1 border-x border-b`}
               onClick={() => setCondition("published:false")}
             >
               Unpublished questions
             </div>
             <div
-              className="text-indigo-600 text-lg font-bold hover:bg-gray-100 hover:cursor-pointer p-1 border-x border-b"
+              className={`${condition === "published:true" ? "bg-gray-200" : ""} text-indigo-600 text-lg font-bold hover:bg-gray-100 hover:cursor-pointer p-1 border-x border-b`}
               onClick={() => setCondition("published:true")}
             >
               Published questions
             </div>
             <div
-              className="text-indigo-600 text-lg font-bold hover:bg-gray-100 hover:cursor-pointer p-1 border-x border-b"
+              className={`${condition === "creation_type:" ? "bg-gray-200" : ""} text-indigo-600 text-lg font-bold hover:bg-gray-100 hover:cursor-pointer p-1 border-x border-b`}
               onClick={() => setCondition("creation_type:")}
             >
               Real questions
             </div>
             <div
-              className="text-indigo-600 text-lg font-bold hover:bg-gray-100 hover:cursor-pointer p-1 border-x border-b"
+              className={`${condition === "" ? "bg-gray-200" : ""} text-indigo-600 text-lg font-bold hover:bg-gray-100 hover:cursor-pointer p-1 border-x border-b`}
               onClick={() => setCondition("")}
             >
               Show all
@@ -94,19 +100,21 @@ const Questions = () => {
         </div>
 
         <div className="mt-10 flex flex-col">
-          <div className="ml-5 mb-1" >Actions:</div>
+          {(condition === "published:false" || condition === "creation_type:test" || condition === "") && (<div className="ml-5 mb-1" >Actions:</div>)}
           <div className="ml-5 flex flex-row max-sm:flex-col">
-            <div
-              className="text-indigo-600 text-lg font-bold hover:bg-gray-100 hover:cursor-pointer p-1 border-x border-b"
+            {(condition === "creation_type:test" || condition === "") && (<button
+              className="mx-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-200 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               onClick={() => deleteQuestions("creation_type:test")}
             >
               Remove all test questions
-            </div>
-            <div
-              className="text-indigo-600 text-lg font-bold hover:bg-gray-100 hover:cursor-pointer p-1 border-x border-b"
+            </button>)}
+
+            {(condition === "published:false" || condition === "") && (<button
+              className="mx-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-200 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              onClick={() => publishQuestions("all")}
             >
               Publish questions
-            </div>
+            </button>)}
           </div>
         </div>
 

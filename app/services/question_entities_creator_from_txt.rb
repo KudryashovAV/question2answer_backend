@@ -92,7 +92,7 @@ class QuestionEntitiesCreatorFromTxt
             q_comment.commented_to_id = question.id
             q_comment.commented_to_type = "Question"
             q_comment.creation_type = "generated"
-            q_comment.published = false
+            q_comment.published = true
             q_comment.reserved = q_comments_count > 0 ? true : false
 
             q_comments_count += 1
@@ -141,7 +141,7 @@ class QuestionEntitiesCreatorFromTxt
           answer.user_id = current_answered_user_id
           answer.question_id = question.id
           answer.creation_type = "generated"
-          answer.published = false
+          answer.published = true
           answer.reserved = q_answers_count > 0 ? true : false
 
           q_answers_count += 1
@@ -185,7 +185,7 @@ class QuestionEntitiesCreatorFromTxt
               a_comment.commented_to_id = answer.id
               a_comment.commented_to_type = "Answer"
               a_comment.creation_type = "generated"
-              a_comment.published = false
+              a_comment.published = true
               a_comment.reserved = a_comments_count > 0 ? true : false
 
               a_comments_count += 1
