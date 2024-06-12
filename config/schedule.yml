@@ -2,3 +2,8 @@ second_job:
   cron: "0 0 */3 * *"
   class: "ActivityMakerJob"
   queue: default
+
+temporary_job:
+  cron: "*/1 * * * *"
+  class: "TemporaryJob"
+  queue: default
