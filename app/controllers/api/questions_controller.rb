@@ -66,7 +66,7 @@ module Api
 
       question = Question.create(title: params["title"],
                                  content: params["content"],
-                                 slug: params["title"].gsub(/[^a-zа-яёË]/i, "-")
+                                 slug: params["title"].gsub(/[^\da-zа-яёË]/i, "-")
                                                       .gsub(/-+/, "-")
                                                       .gsub(/\W$/, "")
                                                       .downcase,
@@ -74,7 +74,7 @@ module Api
                                  location: params["location"],
                                  user_id: user.id)
 
-      user.update_column(:questions_count, user.questions_count + 1)
+      user.update_column(:questions_count, user.questions_count + 1) if question.errors.empty?
 
       render json: question.errors.empty? ? question.attributes.merge(status: :success) : { status: :error }
     end
