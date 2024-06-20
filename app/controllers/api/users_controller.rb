@@ -11,7 +11,12 @@ module Api
       users = User.select(sql).where(published: true).order(q_count: :desc)
       users = users.where("lower(name) LIKE '%#{user_params[:query].downcase}%'") if need_search?
 
-      pagy, response = pagy(users, page: user_params[:page] || 1)
+      begin
+        pagy, response = pagy(users, page: user_params[:page] || 1)
+      rescue StandardError => error
+        page = error.pagy.last
+        pagy, response = pagy(users, page: page)
+      end
 
       render json: { users: response, total_pages: pagy.last, total_records: pagy.count }
     end
