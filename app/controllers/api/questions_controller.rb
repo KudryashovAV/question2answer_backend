@@ -62,7 +62,7 @@ module Api
 
       params = JSON.parse(request.raw_post)
 
-      user = User.find_by(clerk_id: params["user_id"])
+      user = User.find_by(id: params["author_id"])
 
       question = Question.create(title: params["title"],
                                  content: params["content"],
