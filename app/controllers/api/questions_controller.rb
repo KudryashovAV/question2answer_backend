@@ -76,7 +76,7 @@ module Api
 
       user.update_column(:questions_count, user.questions_count + 1) if question.errors.empty?
 
-      render json: question.errors.empty? ? question.attributes.merge(status: :success) : { status: :error }
+      render json: question.errors.empty? ? question.attributes.merge(status: :success) : { status: :error, errors: question.errors.full_messages }
     end
 
     def update
