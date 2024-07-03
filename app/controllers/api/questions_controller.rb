@@ -155,7 +155,13 @@ module Api
     end
 
     def fetch_question_by_slug(question_slug)
-      Question.select(question_sql).where(published: true, slug: question_slug, location: location).first
+      attrs =
+        if question_slug.scan("@@@publishedfalse").present?
+          { slug: question_slug.gsub("@@@publishedfalse", ""), location: location }
+        else
+          { published: true, slug: question_slug, location: location }
+        end
+      Question.select(question_sql).where(attrs).first
     end
 
     def question_sql
