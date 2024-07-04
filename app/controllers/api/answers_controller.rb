@@ -15,7 +15,8 @@ module Api
 
       answer = Answer.create(question_id: params["question"],
                              content: params["content"],
-                             user_id: params["author"])
+                             user_id: params["author"],
+                             reserved: false)
 
       user = User.find_by(id: params["author"])
       user.update_column(:answers_count, user.answers_count + 1)

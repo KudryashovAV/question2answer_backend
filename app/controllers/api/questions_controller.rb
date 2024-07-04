@@ -236,7 +236,7 @@ module Api
         Answers.reserved = false
         ORDER BY
         Answers.created_at
-        DESC
+        ASC
       SQL
 
       ActiveRecord::Base.connection.execute(sql).to_a
@@ -271,7 +271,7 @@ module Api
         Comments.reserved = false
         ORDER BY
         Comments.created_at
-        DESC
+        ASC
       SQL
 
       ActiveRecord::Base.connection.execute(sql).to_a
@@ -306,7 +306,7 @@ module Api
         Comments.reserved = false
         ORDER BY
         Comments.created_at
-        DESC
+        ASC
       SQL
 
       ActiveRecord::Base.connection.execute(sql).to_a
