@@ -15,9 +15,9 @@ module Api
       user.update_column(:comments_count, user.comments_count + 1)
 
       owner = params["owner_type"].classify.constantize.find_by(id: params["owner_id"])
+
       owner.update_columns(comments_count: owner.comments_count + 1,
-                           last_user_commented_type: user.creation_type,
-                           last_user_commented_id: user.id)
+                           last_user_commented_type: user.creation_type)
 
       render json: comment.errors.empty? ? comment.attributes.merge(status: :success) : { status: :error }
     end
