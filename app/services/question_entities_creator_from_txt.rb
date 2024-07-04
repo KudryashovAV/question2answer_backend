@@ -214,12 +214,15 @@ class QuestionEntitiesCreatorFromTxt
       # finish of answers creation
       # start of tag creation
       begin
-        tags_data = raw_tags_data.flatten.first.split(":").last
-        tags_names = tags_data.split("!@#")
+        if raw_tags_data.flatten.present?
 
-        tags_names.each do |t_name|
-          tag = Tag.find_or_create_by(name: t_name.downcase)
-          QuestionTag.create(tag_id: tag.id, question: question)
+          tags_data = raw_tags_data.flatten.first.split(":").last
+          tags_names = tags_data.split("!@#")
+
+          tags_names.each do |t_name|
+            tag = Tag.find_or_create_by(name: t_name.downcase)
+            QuestionTag.create(tag_id: tag.id, question: question)
+          end
         end
       end
       # finish of tag creation
