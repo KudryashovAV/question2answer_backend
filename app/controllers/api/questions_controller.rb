@@ -16,12 +16,12 @@ module Api
                            answers: { comments: { published: true, user_id: user_id} },
                            comments: { published: true, user_id: user_id })
           else
-            fetch_questions(user_id = nil)
+            fetch_questions(user_id)
           end
         elsif need_condition?
           fetch_questions_by_condition(question_params[:condition])
         else
-          fetch_questions(user_id = nil)
+          fetch_questions
         end
 
       questions = questions.where("lower(title) LIKE '%#{question_params[:query].downcase}%'") if need_search?

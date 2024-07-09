@@ -22,7 +22,7 @@ module Api
     end
 
     def show
-      user = User.find_by(clerk_id: params[:id])
+      user = params[:email] ? User.find_by(email: params[:email]) : User.find_by(id: params[:id])
 
       render json: user || []
     end
@@ -60,34 +60,34 @@ module Api
 
       params = JSON.parse(request.raw_post)
 
-      user = User.find_or_create_by(clerk_id: params["clerkId"],
-                                     name: params["name"],
-                                     email: params["email"],
-                                     picture: params["picture"])
+      user = User.find_by(email: params["email"])
+      user = User.create(name: params["name"] || params["email"], password: params["password"], email: params["email"], picture: params["picture"]) unless user
 
       render json: user.errors.empty? ? user.attributes.merge(status: :success) : { status: :error }
     end
 
     def update
       (render json: { status: :bad_request } and return) unless is_crsf_token_valid?
-
+      debugger
       params = JSON.parse(request.raw_post)
 
-      user = User.find_by(clerk_id: params["clerkId"])
+      user = User.find_by(id: params["id"])
 
-      user.update(name: params["name"],
-                  country: params["country"],
-                  city: params["city"],
-                  location: params["location"],
-                  bio: params["bio"],
-                  youtube_link: params["youtube_link"],
-                  linkedin_link: params["linkedin_link"],
-                  facebook_link: params["facebook_link"],
-                  instagram_link: params["instagram_link"],
-                  github_link: params["github_link"],
-                  x_link: params["x_link"])
+      if user
+        user.update(name: params["name"],
+                    country: params["country"],
+                    city: params["city"],
+                    location: params["location"],
+                    bio: params["bio"],
+                    youtube_link: params["youtube_link"],
+                    linkedin_link: params["linkedin_link"],
+                    facebook_link: params["facebook_link"],
+                    instagram_link: params["instagram_link"],
+                    github_link: params["github_link"],
+                    x_link: params["x_link"])
+      end
 
-      render json: user.errors.empty? ? user.attributes.merge(status: :success) : { status: :error }
+      render json: user&.errors&.empty? ? user.attributes.merge(status: :success) : { status: :error }
     end
 
 
