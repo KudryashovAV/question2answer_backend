@@ -23,6 +23,12 @@ const Questions = () => {
     ).then(() => { window.location.reload() });
   }
 
+  const deleteQuestion = async (id) => { await fetch(
+    `/api/questions/${id}`,
+    {method: "DELETE"},
+  ).then(() => { window.location.reload() });
+  }
+
   const publishQuestions = async (type, id = 1) => { await fetch(
     `/api/questions/${id}?type=${type}`,
     {method: "PATCH"},
@@ -262,6 +268,12 @@ const Questions = () => {
                             scope="col"
                             className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-3 pr-4 backdrop-blur backdrop-filter sm:pr-6 lg:pr-8"
                           >
+                            <span className="sr-only">Delete</span>
+                          </th>
+                          <th
+                            scope="col"
+                            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-3 pr-4 backdrop-blur backdrop-filter sm:pr-6 lg:pr-8"
+                          >
                             <span className="sr-only">Show</span>
                           </th>
                         </tr>
@@ -294,6 +306,11 @@ const Questions = () => {
                             </td>
                             <td className="whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
                               {question.comments_count}
+                            </td>
+                            <td className="relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-bold sm:pr-8 lg:pr-8">
+                              <button onClick={() => deleteQuestion(question.slug)} className="py-2 px-4 text-white hover:bg-red-900 bg-red-600 border border-red-700 rounded">
+                                {"DELETE"}
+                              </button>
                             </td>
                             <td className="relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-8 lg:pr-8">
                               <a href={`https://wanswers.com/question/${question.slug}${question.published ? "" : "@@@publishedfalse"}`} className="text-indigo-600 hover:text-indigo-900">

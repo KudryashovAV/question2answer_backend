@@ -6,8 +6,8 @@ Rails.application.routes.draw do
   root "admin/actions#index"
 
   namespace :api do
-    resources :answers, only:  %i[index create]
-    resources :comments, only:  %i[index create]
+    resources :answers, only:  %i[index create destroy]
+    resources :comments, only:  %i[index create destroy]
     resources :questions
     resources :question_tags, only: :create
     resources :admin, only: %i[index update destroy]

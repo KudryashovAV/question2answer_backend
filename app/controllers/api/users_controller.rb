@@ -68,7 +68,7 @@ module Api
 
     def update
       (render json: { status: :bad_request } and return) unless is_crsf_token_valid?
-      debugger
+
       params = JSON.parse(request.raw_post)
 
       user = User.find_by(id: params["id"])

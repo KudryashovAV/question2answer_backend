@@ -26,5 +26,17 @@ module Api
 
       render json: answer.errors.empty? ? answer.attributes.merge(status: :success) : { status: :error }
     end
+
+    def destroy
+      answer = Answer.find(params[:id])
+
+      if params["condition"].blank?
+        answer.destroy
+      else
+        attr, cond = params["condition"].split(":")
+
+        Answer.where(attr => cond).destroy_all
+      end
+    end
   end
 end

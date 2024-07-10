@@ -1,4 +1,4 @@
-class QuestionEntitiesCreatorFromTxt
+class QuestionEntitiesCreatorFromTxtOld
   def self.call(file_data, days_count)
     new(file_data, days_count).call
   end
@@ -15,45 +15,8 @@ class QuestionEntitiesCreatorFromTxt
 
     return if user_ids.blank?
 
-
     questions_data = file_data.split("\n")
-
-    correct_questions_data = []
-
-    result_question = ""
-    title_appears = false
-
-    questions_data.each do |row|
-      if row.scan("-{Question}-title:").present? && title_appears
-        correct_questions_data << result_question if result_question.size > 0
-        result_question = ""
-        title_appears = false
-      end
-
-      if row.scan("-{Question}-title:").present? && !title_appears
-        result_question = result_question + row
-        title_appears = true
-        next
-      end
-
-      if row.scan("-{Question}-content:").present?
-        new_row = row.gsub("-{Question}-content:", "!@#content:")
-        result_question = result_question + new_row
-        next
-      end
-
-      if row.scan("-{Question}-location:").present?
-        new_row = row.gsub("-{Question}-location:", "!@#location:")
-        result_question = result_question + new_row
-        next
-      end
-
-      result_question = result_question + row
-    end
-
-    correct_questions_data << result_question
-
-    correct_questions_data.each do |data|
+    questions_data.each do |data|
       # start prepare data for question, answers, and comments creation
       begin
         raw_q_data = data.split("-{Tags}-")

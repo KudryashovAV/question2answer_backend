@@ -21,5 +21,17 @@ module Api
 
       render json: comment.errors.empty? ? comment.attributes.merge(status: :success) : { status: :error }
     end
+
+    def destroy
+      answer = Comment.find(params[:id])
+
+      if params["condition"].blank?
+        answer.destroy
+      else
+        attr, cond = params["condition"].split(":")
+
+        Comment.where(attr => cond).destroy_all
+      end
+    end
   end
 end

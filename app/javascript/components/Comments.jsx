@@ -17,8 +17,14 @@ const Comments = () => {
   ).then(async (response) => { setSetResponce(await response.json()) });
   }
 
-  const deleteQuestions = async (condition, page_type, id = 1) => { await fetch(
-    `/api/admin/${id}?condition=${condition}&page_type=${page_type}`,
+  const deleteComments = async (condition, id = 1) => { await fetch(
+    `/api/comments/${id}?condition=${condition}`,
+    {method: "DELETE"},
+  ).then(() => { window.location.reload() });
+  }
+
+  const deleteComment = async (id) => { await fetch(
+    `/api/comments/${id}`,
     {method: "DELETE"},
   ).then(() => { window.location.reload() });
   }
@@ -113,7 +119,7 @@ const Comments = () => {
           <div className="ml-5 flex flex-row max-sm:flex-col">
             {(condition === "creation_type:test" || condition === "") && (<button
               className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-200 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onClick={() => deleteQuestions("creation_type:test", "user_page")}
+              onClick={() => deleteComments("creation_type:test")}
             >
               Remove all test comments
             </button>)}
@@ -250,6 +256,12 @@ const Comments = () => {
                           scope="col"
                           className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-3 pr-4 backdrop-blur backdrop-filter sm:pr-6 lg:pr-8"
                         >
+                          <span className="sr-only">Delete</span>
+                        </th>
+                        <th
+                          scope="col"
+                          className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-3 pr-4 backdrop-blur backdrop-filter sm:pr-6 lg:pr-8"
+                        >
                           <span className="sr-only">Show</span>
                         </th>
                       </tr>
@@ -280,10 +292,15 @@ const Comments = () => {
                           <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
                             {comment.reserved?.toString()}
                           </td>
+                          <td className="relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-bold sm:pr-8 lg:pr-8">
+                            <button onClick={() => deleteComment(comment.id)} className="py-2 px-4 text-white hover:bg-red-900 bg-red-600 border border-red-700 rounded">
+                              {"DELETE"}
+                            </button>
+                          </td>
                           <td className="relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-8 lg:pr-8">
-                            <a href={`https://wanswers.com/question/${comment.question_slug}`} className="text-indigo-600 hover:text-indigo-900">
+                            {comment.published ? (<a href={`https://wanswers.com/question/${comment.question_slug}`} className="text-indigo-600 hover:text-indigo-900">
                               {"Show >>"}
-                            </a>
+                            </a>) : "Comment is not published"}
                           </td>
                         </tr>
                       ))}
