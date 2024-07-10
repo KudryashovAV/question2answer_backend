@@ -86,10 +86,10 @@ module Api
     end
 
     def destroy
-      question = fetch_question_by_slug(params[:id])
+      question = Question.where(slug: params[:id])
 
       if question_params["condition"].blank?
-        question.destroy
+        question.destroy_all
       else
         attr, cond = question_params["condition"].split(":")
 

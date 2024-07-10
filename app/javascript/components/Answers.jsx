@@ -9,6 +9,7 @@ const Answers = () => {
   const [query, setQuery] = useState(null);
   const [page, setPage] = useState(1);
   const [condition, setCondition] = useState("");
+  const [deleted, setDeleted] = useState(false);
   const [sortOption, setSortOption] = useState("");
   const [responce, setSetResponce] = useState({});
 
@@ -21,18 +22,18 @@ const Answers = () => {
   const deleteAnswers = async (condition, id = 1) => { await fetch(
     `/api/answers/${id}?condition=${condition}`,
     {method: "DELETE"},
-  ).then(() => { window.location.reload() });
+  ).then(() => { setDeleted(!deleted) });
   }
 
   const deleteAnswer = async (id) => { await fetch(
     `/api/answers/${id}`,
     {method: "DELETE"},
-  ).then(() => { window.location.reload() });
+  ).then(() => { setDeleted(!deleted) });
   }
 
   useEffect(() => {
     getResponce(page, query, condition, "answers_page");
-  }, [query, page, condition, sortOption]);
+  }, [query, page, condition, sortOption, deleted]);
 
   const { answers, total_pages, total_records } = responce
   const isNext = total_records > 12 && page <= total_pages;

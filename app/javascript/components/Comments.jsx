@@ -8,6 +8,7 @@ const Comments = () => {
   const [query, setQuery] = useState(null);
   const [page, setPage] = useState(1);
   const [condition, setCondition] = useState("");
+  const [deleted, setDeleted] = useState(false);
   const [responce, setSetResponce] = useState({});
   const [sortOption, setSortOption] = useState("");
 
@@ -26,18 +27,18 @@ const Comments = () => {
   const deleteComment = async (id) => { await fetch(
     `/api/comments/${id}`,
     {method: "DELETE"},
-  ).then(() => { window.location.reload() });
+  ).then(() => { setDeleted(!deleted) });
   }
 
   const publishQuestions = async (type, page_type, id = 1) => { await fetch(
     `/api/admin/${id}?type=${type}&page_type=${page_type}`,
     {method: "PATCH"},
-  ).then(() => { window.location.reload() });
+  ).then(() => { setDeleted(!deleted) });
   }
 
   useEffect(() => {
     getResponce(page, query, condition, "comments_page");
-  }, [query, page, condition, sortOption]);
+  }, [query, page, condition, sortOption, deleted]);
 
   const { comments, total_pages, total_records } = responce
   const isNext = total_records > 12 && page <= total_pages;
